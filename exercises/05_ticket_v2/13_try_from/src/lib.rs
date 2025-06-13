@@ -1,11 +1,44 @@
 // TODO: Implement `TryFrom<String>` and `TryFrom<&str>` for `Status`.
 //  The parsing should be case-insensitive.
 
+use std::{iter::Inspect, net::ToSocketAddrs};
+
 #[derive(Debug, PartialEq, Clone)]
 enum Status {
     ToDo,
     InProgress,
     Done,
+}
+
+impl TryFrom<String> for Status {
+    type Error = ();
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        if value.to_lowercase() == "todo" {
+            return Ok(Self::ToDo);
+        }
+        if value.to_lowercase() == "inprogress" {
+            return Ok(Self::InProgress)
+        }
+        if value.to_lowercase() == "done" {
+            return Ok(Self::Done)
+        }
+        Err(())
+    }
+}
+impl TryFrom<&str> for Status {
+    type Error = ();
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if value.to_lowercase() == "todo" {
+            return Ok(Self::ToDo);
+        }
+        if value.to_lowercase() == "inprogress" {
+            return Ok(Self::InProgress)
+        }
+        if value.to_lowercase() == "done" {
+            return Ok(Self::Done)
+        }
+        Err(())
+    }
 }
 
 #[cfg(test)]
