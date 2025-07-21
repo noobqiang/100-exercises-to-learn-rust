@@ -13,15 +13,14 @@ enum TicketNewError {
 
 impl Display for TicketNewError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self)
-        // match self {
-        //     Self::TitleError(msg) => {
-        //         write!(f, "{}", msg)
-        //     }
-        //     Self::DescriptionError(msg) => {
-        //         write!(f, "{}", msg)
-        //     }
-        // }
+        match self {
+            Self::TitleError(msg) => {
+                write!(f, "{}", msg)
+            }
+            Self::DescriptionError(msg) => {
+                write!(f, "{}", msg)
+            }
+        }
     }
 }
 
