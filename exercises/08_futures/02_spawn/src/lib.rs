@@ -1,10 +1,32 @@
+use std::sync::Arc;
+use std::result::Result::Ok;
+
+// use anyhow::Ok;
 use tokio::net::TcpListener;
 
 // TODO: write an echo server that accepts TCP connections on two listeners, concurrently.
 //  Multiple connections (on the same listeners) should be processed concurrently.
 //  The received data should be echoed back to the client.
 pub async fn echoes(first: TcpListener, second: TcpListener) -> Result<(), anyhow::Error> {
-    todo!()
+    tokio::spawn(async move {
+        loop {
+            let (mut socket, _) = first.accept().await.unwrap();
+            tokio::spawn(async move {
+                let (mut reader, mut writer) = socket.split();
+                tokio::io::copy(&mut reader, &mut writer).await.unwrap();
+            });
+        }
+    });
+    tokio::spawn(async move {
+        loop {
+            let (mut socket, _) = second.accept().await.unwrap();
+            tokio::spawn(async move {
+                let (mut reader, mut writer) = socket.split();
+                tokio::io::copy(&mut reader, &mut writer).await.unwrap();
+            });
+        }
+    });
+    Ok(())
 }
 
 #[cfg(test)]
